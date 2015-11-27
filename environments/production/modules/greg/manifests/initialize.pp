@@ -19,17 +19,17 @@
 define greg::initialize ($repo, $version, $service, $local_dir, $target, $mode, $owner,) {
 
   exec { "create_dir_path":
-                path        => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+                path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
                 command => "mkdir -p ${local_dir}",
         }
   ->
   file { "${local_dir}/wso2${service}-${version}.zip":
-                source => "puppet:///files/packs/greg/${version}/wso2${service}-${version}.zip",
+                source  => "puppet:///files/packs/greg/${version}/wso2${service}-${version}.zip",
                 recurse => true,
         }
   ->
   file { "/opt/cleanup.sh":
-    mode   => 755,
+    mode   => '0755',
     owner  => root,
     group  => root,
     source => "puppet:///modules/greg/cleanup.sh"
@@ -76,7 +76,7 @@ define greg::initialize ($repo, $version, $service, $local_dir, $target, $mode, 
   }
   ->
   file { "${target}/wso2${service}-${version}/repository/resources/security":
-      source => "puppet:///modules/greg/1.9.0/security",
+      source => "puppet:///modules/greg/5.1.0/security",
       recurse => true,
       ignore => "README.md",
   }

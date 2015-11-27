@@ -15,7 +15,7 @@
 # ----------------------------------------------------------------------------
 #
 # Apply the templates
-define apimanager::push_apistore_templates ($directory, $target, $owner, $group) {
+define greg::push_apistore_templates ($directory, $target, $owner, $group) {
   file { "${target}/repository/${name}":
     ensure  => present,
     owner   => $owner,

@@ -14,12 +14,12 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 #
-# Class apimanager::params
+# Class greg::params
 #
-# This class manages APIM parameters
+# This class manages GReg parameters
 #
 
-class apimanager::params {
+class greg::params {
 
   $domain               = $wso2base::params::domain
   $package_repo         = $wso2base::params::package_repo

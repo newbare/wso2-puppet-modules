@@ -14,18 +14,18 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 #
-# Class: apimanager
+# Class: greg
 #
-# This class installs WSO2 API Manager
+# This class installs WSO2 Governance Registry
 #
 # Parameters:
-#  version            => '1.5.0',
+#  version            => '5.1.0',
 #  offset             => 0,
 #  config_database          => 'config',
 #  maintenance_mode   => 'zero',
 #  depsync            => false,
 #  sub_cluster_domain => 'mgt',
-#  clustering         => true, 
+#  clustering         => true,
 #  cloud              => true,
 #  amtype             => 'gateway',
 #  owner              => 'root',
@@ -35,14 +35,14 @@
 #  port_mapping       => { 8280 => 9763, 8243 => 9443 }
 #
 # Actions:
-#   - Install WSO2 API Manager
+#   - Install WSO2 Governance Registry
 #
 # Requires:
 #
 # Sample Usage:
 #
 
-class apimanager::publisher (
+class greg::publisher (
   $env                = undef,
   $cluster_domain     = undef,
   $sub_cluster_domain = undef,
@@ -59,11 +59,11 @@ class apimanager::publisher (
 ) inherits params {
 
   $amtype          = 'publisher'
-  $deployment_code = 'apimanager'
+  $deployment_code = 'greg'
   $carbon_version  = $version
-  $service_code    = 'am'
+  $service_code    = 'greg'
   $carbon_home     = "${target}/wso2${service_code}-${carbon_version}"
-  $is_lb_fronted   = 'true'
+  $is_lb_fronted   = true
 
   $service_templates = [
     'conf/api-manager.xml',
@@ -81,12 +81,12 @@ class apimanager::publisher (
 
   tag($service_code)
 
-  apimanager::clean { "${deployment_code}_${amtype}":
+  greg::clean { "${deployment_code}_${amtype}":
     mode   => $maintenance_mode,
     target => $carbon_home,
   }
 
-  apimanager::initialize { "${deployment_code}_${amtype}":
+  greg::initialize { "${deployment_code}_${amtype}":
     repo      => $package_repo,
     version   => $carbon_version,
     service   => $service_code,
@@ -94,10 +94,10 @@ class apimanager::publisher (
     target    => $target,
     mode      => $maintenance_mode,
     owner     => $owner,
-    require   => Apimanager::Clean["${deployment_code}_${amtype}"],
+    require   => Greg::Clean["${deployment_code}_${amtype}"],
   }
 
-  apimanager::deploy { "${deployment_code}_${amtype}":
+  greg::deploy { "${deployment_code}_${amtype}":
     amtype   => $amtype,
     service  => $deployment_code,
     version  => $carbon_version,
@@ -105,23 +105,23 @@ class apimanager::publisher (
     owner    => $owner,
     group    => $group,
     target   => $carbon_home,
-    require  => Apimanager::Initialize["${deployment_code}_${amtype}"],
+    require  => Greg::Initialize["${deployment_code}_${amtype}"],
   }
 
   if $sub_cluster_domain == 'worker' {
-    apimanager::create_worker { "${deployment_code}_${amtype}":
+    greg::create_worker { "${deployment_code}_${amtype}":
       target  => $carbon_home,
-      require => Apimanager::Deploy["${deployment_code}_${amtype}"],
+      require => Greg::Deploy["${deployment_code}_${amtype}"],
     }
   }
 
-  apimanager::push_publisher_templates {
+  greg::push_publisher_templates {
     $service_templates:
       target    => $carbon_home,
       directory => "${deployment_code}/${version}",
       owner     => $owner,
       group     => $group,
-      require   => Apimanager::Deploy["${deployment_code}_${amtype}"];
+      require   => Greg::Deploy["${deployment_code}_${amtype}"];
   }
 
   file {
@@ -130,31 +130,31 @@ class apimanager::publisher (
       owner     => $owner,
       group     => $group,
       mode      => '0755',
-      content   => template("apimanager/${version}/wso2server.sh.erb"),
-      require   => Apimanager::Deploy["${deployment_code}_${amtype}"];
+      content   => template("greg/${version}/wso2server.sh.erb"),
+      require   => Greg::Deploy["${deployment_code}_${amtype}"];
   }
 
     exec { "removing_store_app_for_publisher":
         path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
         command  => "rm -rf $carbon_home/repository/deployment/server/jaggeryapps/store",
-        require => Apimanager::Deploy["${deployment_code}_${amtype}"],
+        require => Greg::Deploy["${deployment_code}_${amtype}"],
     }
- 
-  apimanager::startservice { "${deployment_code}_${amtype}":
-    owner   => $owner,
-    group   => $group,
-    target  => $carbon_home,
+
+  greg::startservice { "${deployment_code}_${amtype}":
+    owner     => $owner,
+    group     => $group,
+    target    => $carbon_home,
     directory => "${deployment_code}/${version}",
-    require => [
-      Apimanager::Initialize["${deployment_code}_${amtype}"],
-      Apimanager::Deploy["${deployment_code}_${amtype}"],
-      Apimanager::Push_publisher_templates[$service_templates],
+    require   => [
+      Greg::Initialize["${deployment_code}_${amtype}"],
+      Greg::Deploy["${deployment_code}_${amtype}"],
+      Greg::Push_publisher_templates[$service_templates],
       File["${carbon_home}/bin/wso2server.sh"],
       ],
   }
 
-  apimanager::conf_reset { "reset_puppet_agent_certname_in_conf_file" :
-    require   => Apimanager::Startservice["${deployment_code}_${amtype}"];
+  greg::conf_reset { "reset_puppet_agent_certname_in_conf_file" :
+    require   => Greg::Startservice["${deployment_code}_${amtype}"];
   }
 
 }

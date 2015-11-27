@@ -16,7 +16,7 @@
 #
 # Starts the service once the deployment is successful.
 
-define apimanager::start ($target, $owner) {
+define greg::start ($target, $owner) {
   exec { "strating_${name}":
     user    => $owner,
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
@@ -25,4 +25,3 @@ define apimanager::start ($target, $owner) {
     creates => "${target}/repository/wso2carbon.log",
   }
 }
-

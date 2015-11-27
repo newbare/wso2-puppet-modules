@@ -16,7 +16,7 @@
 #
 # Executes the deployment by pushing all necessary configurations and patches
 
-define apimanager::deploy ($amtype, $service, $version, $security, $target, $owner, $group) {
+define greg::deploy ($amtype, $service, $version, $security, $target, $owner, $group) {
   file { "/tmp/${amtype}":
     ensure       => present,
     owner        => $owner,

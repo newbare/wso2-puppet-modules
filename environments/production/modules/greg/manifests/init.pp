@@ -21,13 +21,13 @@
 # Parameters:
 #  version            => '5.1.0',
 #  offset             => 0,
-#  config_database          => 'config',
+#  config_database    => 'config',
 #  maintenance_mode   => 'zero',
 #  depsync            => false,
 #  sub_cluster_domain => 'mgt',
 #  clustering         => true,
 #  cloud              => true,
-#  amtype             => 'gateway',
+#  gregtype             => 'gateway',
 #  owner              => 'root',
 #  group              => 'root',
 #  target             => '/mnt',
@@ -43,14 +43,14 @@
 #
 
 class greg (
-  $version            = "5.1.0",
+  $version            = '5.1.0',
   $env                = undef,
   $sub_cluster_domain = undef,
   $local_member_port  = '5000',
   $members            = {'127.0.0.1' => '4000'},
   $port_mapping       = false,
   $offset             = 0,
-  $config_database          = 'config',
+  $config_database    = 'config',
   $maintenance_mode   = 'refresh',
   $depsync            = false,
   $clustering         = false,
@@ -61,32 +61,31 @@ class greg (
   $membershipScheme   = 'multicast',
 ) inherits params {
 
-  $amtype          = 'standalone'
+  $gregtype        = 'standalone'
   $deployment_code = 'greg'
   $carbon_version  = $version
-  $service_code    = 'am'
+  $service_code    = 'greg'
   $carbon_home     = "${target}/wso2${service_code}-${carbon_version}"
 
   $service_templates = [
-    'conf/api-manager.xml',
     'conf/axis2/axis2.xml',
     'conf/carbon.xml',
     'conf/datasources/master-datasources.xml',
     'conf/registry.xml',
     'conf/user-mgt.xml',
-    'deployment/server/jaggeryapps/publisher/site/conf/site.json',
-    'deployment/server/jaggeryapps/store/site/conf/site.json',
+    # 'deployment/server/jaggeryapps/publisher/site/conf/site.json',
+    # 'deployment/server/jaggeryapps/store/site/conf/site.json',
 #    'conf/tomcat/catalina-server.xml',
     ]
 
   tag($service_code)
 
-  greg::clean { "${deployment_code}_${amtype}":
+  greg::clean { "${deployment_code}_${gregtype}":
     mode   => $maintenance_mode,
     target => $carbon_home,
   }
 
-  greg::initialize { "${deployment_code}_${amtype}":
+  greg::initialize { "${deployment_code}_${gregtype}":
     repo      => $package_repo,
     version   => $carbon_version,
     service   => $service_code,
@@ -94,24 +93,24 @@ class greg (
     target    => $target,
     mode      => $maintenance_mode,
     owner     => $owner,
-    require   => Apimanager::Clean["${deployment_code}_${amtype}"],
+    require   => Greg::Clean["${deployment_code}_${gregtype}"],
   }
 
-  greg::deploy { "${deployment_code}_${amtype}":
-    amtype   => $amtype,
+  greg::deploy { "${deployment_code}_${gregtype}":
+    gregtype   => $gregtype,
     service  => $deployment_code,
     version  => $carbon_version,
     security => true,
     owner    => $owner,
     group    => $group,
     target   => $carbon_home,
-    require  => Apimanager::Initialize["${deployment_code}_${amtype}"],
+    require  => Greg::Initialize["${deployment_code}_${gregtype}"],
   }
 
   if $sub_cluster_domain == 'worker' {
-    greg::create_worker { "${deployment_code}_${amtype}":
+    greg::create_worker { "${deployment_code}_${gregtype}":
       target  => $carbon_home,
-      require => Apimanager::Deploy["${deployment_code}_${amtype}"],
+      require => Greg::Deploy["${deployment_code}_${gregtype}"],
     }
   }
 
@@ -121,7 +120,7 @@ class greg (
       directory => "${deployment_code}/${version}",
       owner     => $owner,
       group     => $group,
-      require   => Apimanager::Deploy["${deployment_code}_${amtype}"];
+      require   => Greg::Deploy["${deployment_code}_${gregtype}"];
   }
 
   file {
@@ -131,16 +130,16 @@ class greg (
       group     => $group,
       mode      => '0755',
       content   => template("greg/${version}/wso2server.sh.erb"),
-      require   => Apimanager::Deploy["${deployment_code}_${amtype}"];
+      require   => Greg::Deploy["${deployment_code}_${gregtype}"];
   }
 
-  greg::start { "${deployment_code}_${amtype}":
+  greg::start { "${deployment_code}_${gregtype}":
     owner   => $owner,
     target  => $carbon_home,
     require => [
-      Apimanager::Initialize["${deployment_code}_${amtype}"],
-      Apimanager::Deploy["${deployment_code}_${amtype}"],
-      Apimanager::Push_templates[$service_templates],
+      Greg::Initialize["${deployment_code}_${gregtype}"],
+      Greg::Deploy["${deployment_code}_${gregtype}"],
+      Greg::Push_templates[$service_templates],
       File["${carbon_home}/bin/wso2server.sh"],
       ],
   }

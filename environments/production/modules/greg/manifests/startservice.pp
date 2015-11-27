@@ -16,23 +16,23 @@
 #
 # Starts the service once the deployment is successful.
 
-define apimanager::startservice ($group, $owner, $target, $directory) {
+define greg::startservice ($group, $owner, $target, $directory) {
 
-	  file { "/etc/init.d/wso2server":
-				ensure    => present,
-				owner     => $owner,
-				group     => $group,
-				mode      => '0755',
-				content => template("${directory}/wso2init.erb")
-	   }
+	file { "/etc/init.d/wso2server":
+		ensure    => present,
+		owner     => $owner,
+		group     => $group,
+		mode      => '0755',
+		content => template("${directory}/wso2init.erb")
+	}
 
 	service { "wso2server":
-			ensure     => running,
-			enable     => true,
-			hasstatus  => true,
-			hasrestart => true,
-			require    => [
-				    File["/etc/init.d/wso2server"],
-				   ],
-	    }
+		ensure     => running,
+		enable     => true,
+		hasstatus  => true,
+		hasrestart => true,
+		require    => [
+		    File["/etc/init.d/wso2server"],
+			],
+    }
 }
