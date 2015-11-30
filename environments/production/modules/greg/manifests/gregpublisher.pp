@@ -19,7 +19,7 @@
 # This class installs WSO2 Governance Registry
 #
 # Parameters:
-#  version            => '1.5.0',
+#  version            => '5.1.0',
 #  offset             => 0,
 #  config_database          => 'config',
 #  maintenance_mode   => 'zero',
@@ -27,7 +27,7 @@
 #  sub_cluster_domain => 'mgt',
 #  clustering         => true,
 #  cloud              => true,
-#  amtype             => 'gateway',
+#  gregtype             => 'gateway',
 #  owner              => 'root',
 #  group              => 'root',
 #  target             => '/mnt',
@@ -42,7 +42,7 @@
 # Sample Usage:
 #
 
-class greg::apistore (
+class greg::gregpublisher (
   $env                = undef,
   $cluster_domain     = undef,
   $sub_cluster_domain = undef,
@@ -54,11 +54,11 @@ class greg::apistore (
   $depsync            = false,
   $clustering         = false,
   $cloud              = false,
-  $target             = "/mnt/${ipaddress}/apistore",
+  $target             = "/mnt/${ipaddress}/publisher",
   $membershipScheme   = 'multicast',
 ) inherits params {
 
-  $amtype          = 'apistore'
+  $gregtype        = 'publisher'
   $deployment_code = 'greg'
   $carbon_version  = $version
   $service_code    = 'greg'
@@ -73,19 +73,19 @@ class greg::apistore (
     'conf/user-mgt.xml',
     'conf/tomcat/catalina-server.xml',
     'conf/log4j.properties',
+    # 'deployment/server/jaggeryapps/publisher/site/conf/site.json',
 #    'conf/identity.xml',  # in APIM 1.10.0-SNAPSHOT this is located in conf/identity/identity.xml
-#    'deployment/server/jaggeryapps/publisher/site/conf/site.json',
-    'deployment/server/jaggeryapps/store/site/conf/site.json',
+#    'deployment/server/jaggeryapps/store/site/conf/site.json',
     ]
 
   tag($service_code)
 
-  greg::clean { "${deployment_code}_${amtype}":
+  greg::clean { "${deployment_code}_${gregtype}":
     mode   => $maintenance_mode,
     target => $carbon_home,
   }
 
-  greg::initialize { "${deployment_code}_${amtype}":
+  greg::initialize { "${deployment_code}_${gregtype}":
     repo      => $package_repo,
     version   => $carbon_version,
     service   => $service_code,
@@ -93,34 +93,34 @@ class greg::apistore (
     target    => $target,
     mode      => $maintenance_mode,
     owner     => $owner,
-    require   => Greg::Clean["${deployment_code}_${amtype}"],
+    require   => Greg::Clean["${deployment_code}_${gregtype}"],
   }
 
-  greg::deploy { "${deployment_code}_${amtype}":
-    amtype   => $amtype,
+  greg::deploy { "${deployment_code}_${gregtype}":
+    gregtype   => $gregtype,
     service  => $deployment_code,
     version  => $carbon_version,
     security => true,
     owner    => $owner,
     group    => $group,
     target   => $carbon_home,
-    require  => Greg::Initialize["${deployment_code}_${amtype}"],
+    require  => Greg::Initialize["${deployment_code}_${gregtype}"],
   }
 
   if $sub_cluster_domain == 'worker' {
-    greg::create_worker { "${deployment_code}_${amtype}":
+    greg::create_worker { "${deployment_code}_${gregtype}":
       target  => $carbon_home,
-      require => Greg::Deploy["${deployment_code}_${amtype}"],
+      require => Greg::Deploy["${deployment_code}_${gregtype}"],
     }
   }
 
-  greg::push_apistore_templates {
+  greg::push_publisher_templates {
     $service_templates:
       target    => $carbon_home,
       directory => "${deployment_code}/${version}",
       owner     => $owner,
       group     => $group,
-      require   => Greg::Deploy["${deployment_code}_${amtype}"];
+      require   => Greg::Deploy["${deployment_code}_${gregtype}"];
   }
 
   file {
@@ -130,30 +130,30 @@ class greg::apistore (
       group     => $group,
       mode      => '0755',
       content   => template("greg/${version}/wso2server.sh.erb"),
-      require   => Greg::Deploy["${deployment_code}_${amtype}"];
+      require   => Greg::Deploy["${deployment_code}_${gregtype}"];
   }
 
-    exec { "removing_store_app_for_store":
+    exec { "removing_store_app_for_publisher":
         path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-        command => "rm -rf $carbon_home/repository/deployment/server/jaggeryapps/publisher",
-        require => Greg::Deploy["${deployment_code}_${amtype}"],
+        command  => "rm -rf $carbon_home/repository/deployment/server/jaggeryapps/store",
+        require => Greg::Deploy["${deployment_code}_${gregtype}"],
     }
 
-  greg::startservice { "${deployment_code}_${amtype}":
+  greg::startservice { "${deployment_code}_${gregtype}":
     owner     => $owner,
     group     => $group,
     target    => $carbon_home,
     directory => "${deployment_code}/${version}",
     require   => [
-      Greg::Initialize["${deployment_code}_${amtype}"],
-      Greg::Deploy["${deployment_code}_${amtype}"],
-      Greg::Push_apistore_templates[$service_templates],
+      Greg::Initialize["${deployment_code}_${gregtype}"],
+      Greg::Deploy["${deployment_code}_${gregtype}"],
+      Greg::Push_publisher_templates[$service_templates],
       File["${carbon_home}/bin/wso2server.sh"],
       ],
   }
 
   greg::conf_reset { "reset_puppet_agent_certname_in_conf_file" :
-    require   => Greg::Startservice["${deployment_code}_${amtype}"];
+    require   => Greg::Startservice["${deployment_code}_${gregtype}"];
   }
 
 }

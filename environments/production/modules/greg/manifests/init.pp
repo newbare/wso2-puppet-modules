@@ -97,7 +97,7 @@ class greg (
   }
 
   greg::deploy { "${deployment_code}_${gregtype}":
-    gregtype   => $gregtype,
+    gregtype => $gregtype,
     service  => $deployment_code,
     version  => $carbon_version,
     security => true,

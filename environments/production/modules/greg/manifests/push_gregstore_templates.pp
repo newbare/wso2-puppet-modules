@@ -15,7 +15,7 @@
 # ----------------------------------------------------------------------------
 #
 # Apply the templates
-define greg::push_publisher_templates ($directory, $target, $owner, $group) {
+define greg::push_gregstore_templates ($directory, $target, $owner, $group) {
   file { "${target}/repository/${name}":
     ensure  => present,
     owner   => $owner,

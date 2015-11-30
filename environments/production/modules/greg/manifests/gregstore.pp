@@ -19,7 +19,7 @@
 # This class installs WSO2 Governance Registry
 #
 # Parameters:
-#  version            => '5.1.0',
+#  version            => '1.5.0',
 #  offset             => 0,
 #  config_database          => 'config',
 #  maintenance_mode   => 'zero',
@@ -42,7 +42,7 @@
 # Sample Usage:
 #
 
-class greg::publisher (
+class greg::gregstore (
   $env                = undef,
   $cluster_domain     = undef,
   $sub_cluster_domain = undef,
@@ -54,11 +54,11 @@ class greg::publisher (
   $depsync            = false,
   $clustering         = false,
   $cloud              = false,
-  $target             = "/mnt/${ipaddress}/publisher",
+  $target             = "/mnt/${ipaddress}/gregstore",
   $membershipScheme   = 'multicast',
 ) inherits params {
 
-  $amtype          = 'publisher'
+  $amtype          = 'gregstore'
   $deployment_code = 'greg'
   $carbon_version  = $version
   $service_code    = 'greg'
@@ -66,7 +66,6 @@ class greg::publisher (
   $is_lb_fronted   = true
 
   $service_templates = [
-    'conf/api-manager.xml',
     'conf/axis2/axis2.xml',
     'conf/carbon.xml',
     'conf/datasources/master-datasources.xml',
@@ -74,9 +73,9 @@ class greg::publisher (
     'conf/user-mgt.xml',
     'conf/tomcat/catalina-server.xml',
     'conf/log4j.properties',
-    'deployment/server/jaggeryapps/publisher/site/conf/site.json',
 #    'conf/identity.xml',  # in APIM 1.10.0-SNAPSHOT this is located in conf/identity/identity.xml
-#    'deployment/server/jaggeryapps/store/site/conf/site.json',
+#    'deployment/server/jaggeryapps/publisher/site/conf/site.json',
+    'deployment/server/jaggeryapps/store/site/conf/site.json',
     ]
 
   tag($service_code)
@@ -115,7 +114,7 @@ class greg::publisher (
     }
   }
 
-  greg::push_publisher_templates {
+  greg::push_gregstore_templates {
     $service_templates:
       target    => $carbon_home,
       directory => "${deployment_code}/${version}",
@@ -134,9 +133,9 @@ class greg::publisher (
       require   => Greg::Deploy["${deployment_code}_${amtype}"];
   }
 
-    exec { "removing_store_app_for_publisher":
+    exec { "removing_store_app_for_store":
         path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-        command  => "rm -rf $carbon_home/repository/deployment/server/jaggeryapps/store",
+        command => "rm -rf ${carbon_home}/repository/deployment/server/jaggeryapps/publisher",
         require => Greg::Deploy["${deployment_code}_${amtype}"],
     }
 
@@ -148,7 +147,7 @@ class greg::publisher (
     require   => [
       Greg::Initialize["${deployment_code}_${amtype}"],
       Greg::Deploy["${deployment_code}_${amtype}"],
-      Greg::Push_publisher_templates[$service_templates],
+      Greg::Push_gregstore_templates[$service_templates],
       File["${carbon_home}/bin/wso2server.sh"],
       ],
   }

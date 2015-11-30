@@ -16,8 +16,8 @@
 #
 # Executes the deployment by pushing all necessary configurations and patches
 
-define greg::deploy ($amtype, $service, $version, $security, $target, $owner, $group) {
-  file { "/tmp/${amtype}":
+define greg::deploy ($gregtype, $service, $version, $security, $target, $owner, $group) {
+  file { "/tmp/${gregtype}":
     ensure       => present,
     owner        => $owner,
     group        => $group,
@@ -32,12 +32,12 @@ define greg::deploy ($amtype, $service, $version, $security, $target, $owner, $g
   exec {
     "Copy_${name}_modules_to_carbon_home":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
-      command => "cp -r /tmp/${amtype}/* ${target}/; chown -R ${owner}:${owner} ${target}/; chmod -R 755 ${target}/",
-      require => File["/tmp/${amtype}"];
+      command => "cp -r /tmp/${gregtype}/* ${target}/; chown -R ${owner}:${owner} ${target}/; chmod -R 755 ${target}/",
+      require => File["/tmp/${gregtype}"];
 
     "Remove_${name}_temporory_modules_directory":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
-      command => "rm -rf /tmp/${amtype}",
+      command => "rm -rf /tmp/${gregtype}",
       require => Exec["Copy_${name}_modules_to_carbon_home"];
   }
 
