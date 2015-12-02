@@ -16,7 +16,7 @@
 #
 # Creates a worker node by removing all unnecessary jars. Also this will remove default services of the super tenant.
 
-define apimanager::create_worker ($target) {
+define greg::create_worker ($target) {
   exec {
     "remove_manager_jars_from_${name}":
       path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",

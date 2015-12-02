@@ -27,7 +27,7 @@ class greg::params {
   $depsync_svn_repo     = $wso2base::params::depsync_svn_repo
 
   # Master data source information
-  # used in all API Manager classes, i.e., gateway, publisher, pubstore, keymanager, apistore
+  # used in all API Manager classes, i.e., gateway, publisher, pubstore, keymanager, gregstore
   $registry_db_connection_url   = $datasource[registry_db_connection_url]
   $registry_db_user             = $datasource[registry_db_user]
   $registry_db_password         = $datasource[registry_db_password]

@@ -293,9 +293,9 @@
     <!-- This defines the JDBC based remote registry instance configuration  -->
 
     <!-- <remoteInstance url="https://governance.wso2.com:9443/registry"> -->
-    <%- if @gregtype == 'store' -%>
+    <%- if @gregtype == 'gregstore' -%>
     <remoteInstance url="https://store.wso2.com:9443/registry">
-    <%- elsif @gregtype == 'publisher' -%>
+    <%- elsif @gregtype == 'gregpublisher' -%>
     <remoteInstance url="https://publisher.wso2.com:9443/registry">
     <%- end -%>
         <id>govreg</id>

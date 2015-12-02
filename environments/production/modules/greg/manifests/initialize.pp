@@ -27,13 +27,13 @@ define greg::initialize ($repo, $version, $service, $local_dir, $target, $mode, 
                 source  => "puppet:///files/packs/greg/${version}/wso2${service}-${version}.zip",
                 recurse => true,
         }
-  ->
-  file { "/opt/cleanup.sh":
-    mode   => '0755',
-    owner  => root,
-    group  => root,
-    source => "puppet:///modules/greg/cleanup.sh"
-  }
+#  ->
+#  file { "/opt/cleanup.sh":
+#    mode   => '0755',
+#    owner  => root,
+#    group  => root,
+#    source => "puppet:///modules/greg/cleanup.sh"
+#  }
   ->
   exec {
     "creating_target_for_${name}":

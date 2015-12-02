@@ -28,7 +28,7 @@
     <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                 port="9763"
                 <%- if @proxy_port_enabled == true -%>
-                <%= @http_proxy_port %>
+                proxyPort="<%= @http_proxy_port %>"
                 <%- end -%>
                 redirectPort="9443"
                 bindOnInit="false"
@@ -55,7 +55,7 @@
     <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                 port="9443"
                 <%- if @proxy_port_enabled == true -%>
-                <%= @https_proxy_port %>
+                proxyPort="<%= @https_proxy_port %>"
                 <%- end -%>
                 bindOnInit="false"
                 sslProtocol="TLS"

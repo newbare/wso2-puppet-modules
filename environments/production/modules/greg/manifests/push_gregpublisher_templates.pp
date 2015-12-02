@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-#  Copyright 2015 WSO2, Inc. http://www.wso2.org
+#  Copyright 2005-2013 WSO2, Inc. http://www.wso2.org
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 #
-# This will reset the puppet agent nodes puppet.conf configuration file
-# If exists, the previously used certname will be removed from puppet.conf file
-
-define greg::conf_reset {
-	file {  "/etc/puppet/puppet.conf":
-                ensure  => file,
-                content => template('wso2base/puppet.agent.clean.erb'),
-        }
+# Apply the templates
+define greg::push_gregpublisher_templates ($directory, $target, $owner, $group) {
+  file { "${target}/repository/${name}":
+    ensure  => present,
+    owner   => $owner,
+    group   => $group,
+    mode    => '0755',
+    content => template("${directory}/${name}.erb"),
+  }
 }

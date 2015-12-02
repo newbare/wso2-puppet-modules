@@ -21,7 +21,7 @@
 # Parameters:
 #  version            => '5.1.0',
 #  offset             => 0,
-#  config_database    => 'config',
+#  config_database          => 'config',
 #  maintenance_mode   => 'zero',
 #  depsync            => false,
 #  sub_cluster_domain => 'mgt',
@@ -42,30 +42,33 @@
 # Sample Usage:
 #
 
-class greg (
-  $version            = '5.1.0',
+class greg::gregpublisher (
   $env                = undef,
+  $cluster_domain     = undef,
   $sub_cluster_domain = undef,
-  $local_member_port  = '5000',
+  $local_member_port  = '4000',
   $members            = {'127.0.0.1' => '4000'},
   $port_mapping       = false,
   $offset             = 0,
   $config_database    = 'config',
-  $maintenance_mode   = 'refresh',
   $depsync            = false,
   $clustering         = false,
   $cloud              = false,
-  $owner              = 'root',
-  $group              = 'root',
-  $target             = '/mnt',
+  $target             = "/mnt/${ipaddress}/publisher",
   $membershipScheme   = 'multicast',
+  $carbon_hostname    = '127.0.0.1',
+  $carbon_mgt_hostname = '127.0.0.1',
+  $proxy_port_enabled = false,
+  $http_proxy_port    = 80,
+  $https_proxy_port   = 443,
 ) inherits params {
 
-  $gregtype        = 'standalone'
+  $gregtype        = 'gregpublisher'
   $deployment_code = 'greg'
   $carbon_version  = $version
   $service_code    = 'greg'
   $carbon_home     = "${target}/wso2${service_code}-${carbon_version}"
+  $is_lb_fronted   = true
 
   $service_templates = [
     'conf/axis2/axis2.xml',
@@ -73,9 +76,12 @@ class greg (
     'conf/datasources/master-datasources.xml',
     'conf/registry.xml',
     'conf/user-mgt.xml',
+    'conf/tomcat/catalina-server.xml',
+    'conf/identity/sso-idp-config.xml',
+    # 'conf/log4j.properties',
     # 'deployment/server/jaggeryapps/publisher/site/conf/site.json',
-    # 'deployment/server/jaggeryapps/store/site/conf/site.json',
-#    'conf/tomcat/catalina-server.xml',
+#    'conf/identity.xml',  # in APIM 1.10.0-SNAPSHOT this is located in conf/identity/identity.xml
+#    'deployment/server/jaggeryapps/store/site/conf/site.json',
     ]
 
   tag($service_code)
@@ -97,7 +103,7 @@ class greg (
   }
 
   greg::deploy { "${deployment_code}_${gregtype}":
-    gregtype => $gregtype,
+    gregtype   => $gregtype,
     service  => $deployment_code,
     version  => $carbon_version,
     security => true,
@@ -114,7 +120,7 @@ class greg (
     }
   }
 
-  greg::push_templates {
+  greg::push_gregpublisher_templates {
     $service_templates:
       target    => $carbon_home,
       directory => "${deployment_code}/${version}",
@@ -133,14 +139,27 @@ class greg (
       require   => Greg::Deploy["${deployment_code}_${gregtype}"];
   }
 
-  greg::start { "${deployment_code}_${gregtype}":
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
+    exec { "removing_store_app_for_publisher":
+        path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        command  => "rm -rf $carbon_home/repository/deployment/server/jaggeryapps/store",
+        require => Greg::Deploy["${deployment_code}_${gregtype}"],
+    }
+
+  greg::startservice { "${deployment_code}_${gregtype}":
+    owner     => $owner,
+    group     => $group,
+    target    => $carbon_home,
+    directory => "${deployment_code}/${version}",
+    require   => [
       Greg::Initialize["${deployment_code}_${gregtype}"],
       Greg::Deploy["${deployment_code}_${gregtype}"],
-      Greg::Push_templates[$service_templates],
+      Greg::Push_gregpublisher_templates[$service_templates],
       File["${carbon_home}/bin/wso2server.sh"],
       ],
   }
+
+  greg::conf_reset { "reset_puppet_agent_certname_in_conf_file" :
+    require   => Greg::Startservice["${deployment_code}_${gregtype}"];
+  }
+
 }
