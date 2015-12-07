@@ -16,6 +16,8 @@ import "wso2base/basenode"
 
 # API Manager all node definitions
 import "apimanager/nodes"
+import "greg/nodes"	
+
 
 # Loadbalancer configurations
 import "wso2base/loadbalancer"

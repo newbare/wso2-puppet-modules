@@ -1,4 +1,7 @@
-node /publisher/ inherits base {
+#
+# API Manager - Publisher node definition
+#
+node /apim_publisher/ inherits base {
     $publisher = hiera("publisher")
       class { "apimanager::publisher":
         offset                          => $publisher[offset],
@@ -15,7 +18,13 @@ node /publisher/ inherits base {
     }
 }
 
-node /pubstore/ inherits base {
+#
+# API Manager - Pubstore node definition
+# Publisher + apistore in one node
+# This node definition should come before /store/ node definition,
+# to capture the pubstore certname/hostname incoming agent requests first
+#
+node /apim_pubstore/ inherits base {
  $pubstore = hiera("pubstore")
       class { "apimanager::pubstore":
         offset                          => $pubstore[offset],
@@ -30,7 +39,11 @@ node /pubstore/ inherits base {
     }
 }
 
-node /store/ inherits base {
+#
+# API Manager - apistore node definition
+# This should come after /pubstore/ node definition
+#
+node /apim_store/ inherits base {
   $store = hiera("store")
       class { "apimanager::apistore":
         offset                          => $store[offset],
@@ -47,7 +60,10 @@ node /store/ inherits base {
     }
 }
 
-node /keymanager/ inherits base {
+#
+# API Manager - Keymanager node definition
+#
+node /apim_keymanager/ inherits base {
     $keymanager = hiera("keymanager")
       class { "apimanager::keymanager":
         offset                          => $keymanager[offset],
@@ -63,7 +79,11 @@ node /keymanager/ inherits base {
     }
 }
 
-node /gateway/ inherits base {
+#
+# API Manager - Gateway node definition
+# Node definition for gateway-manager and gateway-worker nodes
+#
+node /apim_gateway/ inherits base {
  $gateway = hiera("gateway")
       class { "apimanager::gateway":
         offset                          => $gateway[offset],

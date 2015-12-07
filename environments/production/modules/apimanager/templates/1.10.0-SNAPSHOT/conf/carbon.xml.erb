@@ -30,11 +30,14 @@
     <Name>WSO2 API Manager</Name>
 
     <!--
+       machine readable unique key to identify each product
+    -->
+    <ServerKey>AM</ServerKey>
+
+    <!--
        Product Version
     -->
     <Version>1.10.0</Version>
-
-    <ServerKey>AM</ServerKey>
 
     <!--
        Host name or IP address of the machine hosting this server
@@ -43,6 +46,9 @@
        services deployed on this server instance.
     -->
     <!--HostName>www.wso2.org</HostName-->
+    <%- if @carbon_hostname -%>
+    <HostName><%= @carbon_hostname %></HostName>
+    <%- end -%>
 
     <!--
     Host name to be used for the Carbon management console

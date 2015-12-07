@@ -6,11 +6,11 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaywkr1
+          hostname: apim_gatewaywkr1
           hostrole: active
           porttype: HTTPservlet
          - 
-          hostname: gatewaywkr2
+          hostname: apim_gatewaywkr2
           hostrole: passive
           porttype: HTTPservlet
   - 
@@ -19,11 +19,11 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaywkr1
+          hostname: apim_gatewaywkr1
           hostrole: active
           porttype: HTTPSservlet
          - 
-          hostname: gatewaywkr2
+          hostname: apim_gatewaywkr2
           hostrole: passive
           porttype: HTTPSservlet
   -   
@@ -32,11 +32,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gatewaywkr1
+           hostname: apim_gatewaywkr1
            hostrole: active
            porttype: NHTTP
           - 
-           hostname: gatewaywkr2
+           hostname: apim_gatewaywkr2
            hostrole: passive
            porttype: NHTTP
   - 
@@ -45,7 +45,7 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaymgr1
+          hostname: apim_gatewaymgr1
           hostrole:
           porttype: HTTPservlet
   - 
@@ -54,7 +54,7 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaymgr1
+          hostname: apim_gatewaymgr1
           hostrole:
           porttype: HTTPSservlet
   - 
@@ -63,11 +63,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gatewaywkr1
+           hostname: apim_gatewaywkr1
            hostrole: active
            porttype: NHTTPS
           - 
-           hostname: gatewaywkr2
+           hostname: apim_gatewaywkr2
            hostrole: passive
            porttype: NHTTPS
 servers:

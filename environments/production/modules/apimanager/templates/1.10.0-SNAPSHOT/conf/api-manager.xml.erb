@@ -280,17 +280,30 @@
         <!--
             Server URL of the API key manager
         -->
+        <%- if @amtype == 'gateway' or @amtype == 'publisher' or @amtype == 'apistore' or @amtype == 'pubstore' -%>
+        <ServerURL>https://<%= hosts['keymanager_domain'].split(",")[0]%>/services/</ServerURL>
+        <%- else -%>
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}${carbon.context}/services/</ServerURL>
+        <%- end -%>
 
         <!--
             Admin username for API key manager.
         -->
+        <%- if @amtype == 'gateway' or @amtype == 'publisher' or @amtype == 'apistore' or @amtype == 'pubstore' -%>
+        <Username>admin</Username>
+        <%- else -%>
         <Username>${admin.username}</Username>
+        <%- end -%>
 
         <!--
             Admin password for API key manager.
         -->
+        <%- if @amtype == 'gateway' or @amtype == 'publisher' or @amtype == 'apistore' or @amtype == 'pubstore' -%>
+        <Password>admin</Password>
+        <%- else -%>
         <Password>${admin.password}</Password>
+        <%- end -%>
+
         <!--
             Enable/Disable JWT caching.
         -->
@@ -347,6 +360,25 @@
             <Scope>^device_.*</Scope>
             <Scope>openid</Scope>
         </ScopeWhitelist-->
+    
+        <RESTAPIScopes>
+            <Scope>
+                <Name>API_PUBLISHER_SCOPE</Name>
+                <Roles>admin</Roles>
+            </Scope>
+            <Scope>
+                <Name>API_SUBSCRIBER_SCOPE</Name>
+                <Roles>subscriber</Roles>
+            </Scope>
+            <Scope>
+                <Name>API_CREATOR_SCOPE</Name>
+                <Roles>admin</Roles>
+            </Scope>
+            <Scope>
+                <Name>API_ADMINISTRATIVE_SCOPE</Name>
+                <Roles>admin</Roles>
+            </Scope>
+        </RESTAPIScopes>
 
 	<!-- Name of the token API -->
 	<TokenEndPointName>/oauth2/token</TokenEndPointName>

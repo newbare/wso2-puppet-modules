@@ -6,11 +6,11 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaywkr1
+          hostname: apim_gatewaywkr1
           hostrole:
           porttype: HTTPservlet
          - 
-          hostname: gatewaywkr2
+          hostname: apim_gatewaywkr2
           hostrole:
           porttype: HTTPservlet
   - 
@@ -19,11 +19,11 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaywkr1
+          hostname: apim_gatewaywkr1
           hostrole:
           porttype: HTTPSservlet
          - 
-          hostname: gatewaywkr2
+          hostname: apim_gatewaywkr2
           hostrole:
           porttype: HTTPSservlet
   -   
@@ -32,11 +32,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gatewaywkr1
+           hostname: apim_gatewaywkr1
            hostrole:
            porttype: NHTTP
           - 
-           hostname: gatewaywkr2
+           hostname: apim_gatewaywkr2
            hostrole:
            porttype: NHTTP
   - 
@@ -45,7 +45,7 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaymgr1
+          hostname: apim_gatewaymgr1
           hostrole:
           porttype: HTTPservlet
   - 
@@ -54,7 +54,7 @@ upstreams:
       hosts:
         host:
          - 
-          hostname: gatewaymgr1
+          hostname: apim_gatewaymgr1
           hostrole:
           porttype: HTTPSservlet
   - 
@@ -63,11 +63,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gatewaywkr1
+           hostname: apim_gatewaywkr1
            hostrole:
            porttype: NHTTPS
           - 
-           hostname: gatewaywkr2
+           hostname: apim_gatewaywkr2
            hostrole:
            porttype: NHTTPS
 # keymanager
@@ -77,11 +77,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: keymanager1
+           hostname: apim_keymanager1
            hostrole:
            porttype: HTTPservlet
           - 
-           hostname: keymanager2
+           hostname: apim_keymanager2
            hostrole:
            porttype: HTTPservlet
   - 
@@ -90,11 +90,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: keymanager1
+           hostname: apim_keymanager1
            hostrole:
            porttype: HTTPSservlet
           - 
-           hostname: keymanager2
+           hostname: apim_keymanager2
            hostrole:
            porttype: HTTPSservlet
 # publisher
@@ -104,11 +104,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: publisher1
+           hostname: apim_publisher1
            hostrole:
            porttype: HTTPservlet
           - 
-           hostname: publisher2
+           hostname: apim_publisher2
            hostrole:
            porttype: HTTPservlet
   - 
@@ -117,11 +117,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: publisher1
+           hostname: apim_publisher1
            hostrole:
            porttype: HTTPSservlet
           - 
-           hostname: publisher2
+           hostname: apim_publisher2
            hostrole:
            porttype: HTTPSservlet
 # store
@@ -131,11 +131,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: store1
+           hostname: apim_store1
            hostrole:
            porttype: HTTPservlet
           - 
-           hostname: store2
+           hostname: apim_store2
            hostrole:
            porttype: HTTPservlet
   - 
@@ -144,11 +144,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: store1
+           hostname: apim_store1
            hostrole:
            porttype: HTTPSservlet
           - 
-           hostname: store2
+           hostname: apim_store2
            hostrole: 
            porttype: HTTPSservlet
 
