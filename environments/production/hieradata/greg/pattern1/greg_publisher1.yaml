@@ -1,6 +1,6 @@
 ---
 publisher:
- depsync: false
+ depsync_enabled: true
 # offset: 0
  carbon_hostname: publisher.wso2.com
  carbon_mgt_hostname: publisher.wso2.com
@@ -12,10 +12,10 @@ publisher:
  sub_cluster_domain: mgt
  members:
     -
-     name: store1
+     name: greg_store1
      port:  4000
     -
-     name: publisher1
+     name: greg_publisher2
      port: 4000
  port_mapping: false
  stage: deploy

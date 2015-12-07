@@ -1,8 +1,8 @@
-node /gregpublisher/ inherits base {
+node /greg_publisher/ inherits base {
     $publisher = hiera("publisher")
       class { "greg::gregpublisher":
         offset                          => $publisher[offset],
-        depsync                         => $publisher[depsync],
+        depsync_enabled                 => $publisher[depsync_enabled],
         local_member_port               => $publisher[local_member_port],
         clustering                      => $publisher[clustering],
         membershipScheme                => $publisher[membershipScheme],
@@ -19,11 +19,11 @@ node /gregpublisher/ inherits base {
     }
 }
 
-node /gregstore/ inherits base {
+node /greg_store/ inherits base {
   $store = hiera("store")
       class { "greg::gregstore":
         offset                          => $store[offset],
-        depsync                         => $store[depsync],
+        depsync_enabled                 => $store[depsync_enabled],
         local_member_port               => $store[local_member_port],
         clustering                      => $store[clustering],
         membershipScheme                => $store[membershipScheme],
