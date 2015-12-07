@@ -1,57 +1,59 @@
 ---
 upstreams:
 # gateway
-    - 
-      name: gatewaymgthttp
-      lb_mechanism:
+    -  
+      name: mgtgatewayhttp
+      lb_mechanism: ip_hash
       hosts:
         host:
           - 
-           hostname: gateway1
-           hostrole: active
-           porttype: HTTPservlet
-          - 
-           hostname: gateway2
-           hostrole: passive
+           hostname: apim_gateway1
+           hostrole:
            porttype: HTTPservlet
     - 
-      name: gatewaymgthttps
-      lb_mechanism:
+      name: mgtgatewayhttps
+      lb_mechanism: ip_hash
       hosts:
         host:
           - 
-           hostname: gateway1
-           hostrole: active
-           porttype: HTTPSservlet
-          - 
-           hostname: gateway2
-           hostrole: passive
+           hostname: apim_gateway1
+           hostrole:
            porttype: HTTPSservlet
     - 
       name: gatewaynhttp
+      lb_mechanism: 
+      hosts:
+        host:
+          - 
+           hostname: apim_gateway2
+           hostrole:
+           porttype: NHTTP     
+    -  
+      name: gatewayhttp
+      lb_mechanism: 
+      hosts:
+        host:
+          - 
+           hostname: apim_gateway2
+           hostrole: 
+           porttype: HTTPservlet
+    -   
+      name: gatewayhttps
       lb_mechanism:
       hosts:
         host:
           - 
-           hostname: gateway1
-           hostrole: active
-           porttype: NHTTP
-          - 
-           hostname: gateway2
-           hostrole: passive
-           porttype: NHTTP
+           hostname: apim_gateway2
+           hostrole:
+           porttype: HTTPSservlet
     - 
       name: gatewaynhttps
       lb_mechanism:
       hosts:
         host:
           - 
-           hostname: gateway1
-           hostrole: active
-           porttype: NHTTPS
-          - 
-           hostname: gateway2
-           hostrole: passive
+           hostname: apim_gateway2
+           hostrole:
            porttype: NHTTPS
 
 # store
@@ -61,24 +63,24 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: store1
+           hostname: apim_store1
            hostrole: active
            porttype: HTTPservlet
           - 
-           hostname: store2
+           hostname: apim_store2
            hostrole: passive
            porttype: HTTPservlet
     - 
       name: storehttps
-      lb_mechanism:
+      lb_mechanism: 
       hosts:
         host:
           - 
-           hostname: store1
+           hostname: apim_store1
            hostrole: active
            porttype: HTTPSservlet
           - 
-           hostname: store2
+           hostname: apim_store2
            hostrole: passive
            porttype: HTTPSservlet
 
@@ -86,7 +88,7 @@ servers:
 # gateway
   - 
    port: HTTPS
-   name: gatewaymgt_domain
+   name: gateway_domain
    sslstatus: "on"
    sslcertificate: /etc/nginx/ssl/gateway.crt
    sslcertificatekey: /etc/nginx/ssl/gateway.key
@@ -94,17 +96,38 @@ servers:
      location:
         - 
          context: "/"
-         proxypass: gatewaymgthttps
+         proxypass: gatewayhttps
          protocol: https
+  -  
+   port: HTTP
+   name: gateway_domain
+   locations:
+     location:
+        - 
+         context: "/"
+         proxypass: gatewayhttp
+         protocol: http
   - 
    port: HTTP
    name: gatewaymgt_domain
    locations:
-    location:
+     location:
         - 
          context: "/"
-         proxypass: gatewaymgthttp
+         proxypass: mgtgatewayhttp
          protocol: http
+  - 
+   port: HTTPS
+   name: gatewaymgt_domain
+   sslstatus: "on"
+   sslcertificate: /etc/nginx/ssl/mgtgateway.crt
+   sslcertificatekey: /etc/nginx/ssl/mgtgateway.key
+   locations:
+     location:
+        - 
+         context: "/"
+         proxypass: mgtgatewayhttps
+         protocol: https
   - 
    port: NHTTP
    name: gateway_domain

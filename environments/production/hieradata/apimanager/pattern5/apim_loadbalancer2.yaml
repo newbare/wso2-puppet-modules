@@ -8,11 +8,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: keymanager1
+           hostname: apim_keymanager1
            hostrole: active
            porttype: HTTPservlet
           - 
-           hostname: keymanager2
+           hostname: apim_keymanager2
            hostrole: passive
            porttype: HTTPservlet
     - 
@@ -21,38 +21,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: keymanager1
-           hostrole: active 
-           porttype: HTTPSservlet
-          - 
-           hostname: keymanager2
-           hostrole: passive
-           porttype: HTTPSservlet
-# store
-    - 
-      name: storehttp
-      lb_mechanism:
-      hosts:
-        host:
-          - 
-           hostname: store3
-           hostrole: active
-           porttype: HTTPservlet
-          - 
-           hostname: store4
-           hostrole: passive
-           porttype: HTTPservlet
-    -   
-      name: storehttps
-      lb_mechanism:
-      hosts:
-        host:
-          - 
-           hostname: store3
+           hostname: apim_keymanager1
            hostrole: active
            porttype: HTTPSservlet
           - 
-           hostname: store4
+           hostname: apim_keymanager2
            hostrole: passive
            porttype: HTTPSservlet
 # publisher
@@ -62,7 +35,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: publisher1
+           hostname: apim_publisher1
            hostrole:
            porttype: HTTPservlet
     - 
@@ -71,7 +44,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: publisher1
+           hostname: apim_publisher1
            hostrole:
            porttype: HTTPSservlet
 
@@ -121,27 +94,4 @@ servers:
         - 
          context: "/"
          proxypass: publisherhttp
-         protocol: http
-
-# store
-  - 
-   port: HTTPS
-   name: internal_store_domain
-   sslstatus: "on"
-   sslcertificate: /etc/nginx/ssl/internalstore.crt
-   sslcertificatekey: /etc/nginx/ssl/internalstore.key
-   locations:
-     location:
-        - 
-         context: "/"
-         proxypass: storehttps
-         protocol: https
-  - 
-   port: HTTP
-   name: internal_store_domain
-   locations:
-    location:
-        - 
-         context: "/"
-         proxypass: storehttp
          protocol: http

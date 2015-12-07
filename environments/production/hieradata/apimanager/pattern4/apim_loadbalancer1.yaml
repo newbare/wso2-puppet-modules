@@ -2,39 +2,39 @@
 upstreams:
 # gateway
     - 
+      name: mgtgatewayhttps
+      lb_mechanism: ip_hash
+      hosts:
+        host:
+          - 
+           hostname: apim_gateway1
+           hostrole:
+           porttype: HTTPSservlet
+    -  
+      name: mgtgatewayhttp
+      lb_mechanism: ip_hash
+      hosts:
+        host:
+          - 
+           hostname: apim_gateway1
+           hostrole:
+           porttype: HTTPservlet
+    - 
       name: gatewayhttp
       lb_mechanism:
       hosts:
         host:
           - 
-           hostname: gateway2
-           hostrole: 
-           porttype: HTTPservlet
-    - 
-      name: gatewayhttps
-      lb_mechanism: 
-      hosts:
-        host:
-          - 
-           hostname: gateway2
-           hostrole:  
-           porttype: HTTPSservlet
-    - 
-      name: gatewaymgthttp
-      lb_mechanism:
-      hosts:
-        host:
-          - 
-           hostname: gateway1
+           hostname: apim_gateway2
            hostrole:
            porttype: HTTPservlet
     - 
-      name: gatewaymgthttps
+      name: gatewayhttps
       lb_mechanism:
       hosts:
         host:
           - 
-           hostname: gateway1
+           hostname: apim_gateway2
            hostrole:
            porttype: HTTPSservlet
     - 
@@ -43,7 +43,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gateway2
+           hostname: apim_gateway2
            hostrole: 
            porttype: NHTTP
     - 
@@ -52,75 +52,35 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gateway2
+           hostname: apim_gateway2
            hostrole: 
            porttype: NHTTPS
-
-# keymanager
-    - 
-      name: keymgrhttp
-      lb_mechanism: ip_hash
-      hosts:
-        host:
-          - 
-           hostname: keymanager1
-           hostrole:
-           porttype: HTTPservlet
-          - 
-           hostname: keymanager2
-           hostrole:
-           porttype: HTTPservlet
-    - 
-      name: keymgrhttps
-      lb_mechanism: ip_hash
-      hosts:
-        host:
-          - 
-           hostname: keymanager1
-           hostrole:
-           porttype: HTTPSservlet
-          - 
-           hostname: keymanager2
-           hostrole:
-           porttype: HTTPSservlet
 # store
     - 
       name: storehttp
-      lb_mechanism: ip_hash
+      lb_mechanism:
       hosts:
         host:
           - 
-           hostname: pubstore1
-           hostrole:
+           hostname: apim_store1
+           hostrole: active
+           porttype: HTTPservlet
+          - 
+           hostname: apim_store2
+           hostrole: passive
            porttype: HTTPservlet
     - 
       name: storehttps
-      lb_mechanism: ip_hash
+      lb_mechanism:
       hosts:
         host:
           - 
-           hostname: pubstore1
-           hostrole:
+           hostname: apim_store1
+           hostrole: active
            porttype: HTTPSservlet
-
-# publisher
-    - 
-      name: publisherhttp
-      lb_mechanism: ip_hash
-      hosts:
-        host:
           - 
-           hostname: pubstore1
-           hostrole:
-           porttype: HTTPservlet
-    - 
-      name: publisherhttps
-      lb_mechanism: ip_hash
-      hosts:
-        host:
-          - 
-           hostname: pubstore1
-           hostrole:
+           hostname: apim_store2
+           hostrole: passive
            porttype: HTTPSservlet
 
 servers:
@@ -135,8 +95,17 @@ servers:
      location:
         - 
          context: "/"
-         proxypass: gatewayhttps
+         proxypass: gatewaynhttps
          protocol: https
+  - 
+   port: HTTP
+   name: gatewaymgt_domain
+   locations:
+     location:
+        - 
+         context: "/"
+         proxypass: mgtgatewayhttp
+         protocol: http
   - 
    port: HTTP
    name: gateway_domain
@@ -156,17 +125,8 @@ servers:
      location:
         - 
          context: "/"
-         proxypass: gatewaymgthttps
+         proxypass: mgtgatewayhttps
          protocol: https
-  - 
-   port: HTTP
-   name: gatewaymgt_domain
-   locations:
-    location:
-        - 
-         context: "/"
-         proxypass: gatewaymgthttp
-         protocol: http
   - 
    port: NHTTP
    name: gateway_domain
@@ -184,55 +144,31 @@ servers:
         - 
          context: "/"
          proxypass: gatewaynhttps
-         protocol: https
-
-# keymanager
-  - 
-   port: HTTPS
-   name: keymanager_domain
-   sslstatus: "on"
-   sslcertificate: /etc/nginx/ssl/keymanager.crt
-   sslcertificatekey: /etc/nginx/ssl/keymanager.key
-   locations:
-     location:
-        - 
-         context: "/"
-         proxypass: keymgrhttps
-         protocol: https
-  - 
-   port: HTTP
-   name: keymanager_domain
-   locations:
-    location:
-        - 
-         context: "/"
-         proxypass: keymgrhttp
-         protocol: http
-
-# publisher
-  - 
-   port: HTTPS
-   name: publisher_domain
-   sslstatus: "on"
-   sslcertificate: /etc/nginx/ssl/publisher.crt
-   sslcertificatekey: /etc/nginx/ssl/publisher.key
-   locations:
-     location:
-        - 
-         context: "/"
-         proxypass: publisherhttps
-         protocol: https
-  - 
-   port: HTTP
-   name: publisher_domain
-   locations:
-    location:
-        - 
-         context: "/"
-         proxypass: publisherhttp
-         protocol: http
 
 # store
+  - 
+   port: HTTPS
+   name: external_store_domain
+   sslstatus: "on"
+   sslcertificate: /etc/nginx/ssl/externalstore.crt
+   sslcertificatekey: /etc/nginx/ssl/externalstore.key
+   locations:
+     location:
+        - 
+         context: "/"
+         proxypass: storehttps
+         protocol: https
+  - 
+   port: HTTP
+   name: external_store_domain
+   locations:
+    location:
+        - 
+         context: "/"
+         proxypass: storehttp
+         protocol: http
+
+# store - for test automation suite
   - 
    port: HTTPS
    name: store_domain

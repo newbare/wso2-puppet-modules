@@ -7,11 +7,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gateway1
+           hostname: apim_gateway1
            hostrole: active
            porttype: HTTPservlet
           - 
-           hostname: gateway2
+           hostname: apim_gateway2
            hostrole: passive
            porttype: HTTPservlet
     - 
@@ -20,11 +20,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gateway1
+           hostname: apim_gateway1
            hostrole: active
            porttype: HTTPSservlet
           - 
-           hostname: gateway2
+           hostname: apim_gateway2
            hostrole: passive
            porttype: HTTPSservlet
     - 
@@ -33,11 +33,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gateway1
+           hostname: apim_gateway1
            hostrole: active
            porttype: NHTTP
           - 
-           hostname: gateway2
+           hostname: apim_gateway2
            hostrole: passive
            porttype: NHTTP
     - 
@@ -46,11 +46,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: gateway1
+           hostname: apim_gateway1
            hostrole: active
            porttype: NHTTPS
           - 
-           hostname: gateway2
+           hostname: apim_gateway2
            hostrole: passive
            porttype: NHTTPS
 
@@ -61,11 +61,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: keymanager1
+           hostname: apim_keymanager1
            hostrole: active
            porttype: HTTPservlet
           - 
-           hostname: keymanager2
+           hostname: apim_keymanager2
            hostrole: passive
            porttype: HTTPservlet
     - 
@@ -74,11 +74,11 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: keymanager1
+           hostname: apim_keymanager1
            hostrole: active
            porttype: HTTPSservlet
           - 
-           hostname: keymanager2
+           hostname: apim_keymanager2
            hostrole: passive
            porttype: HTTPSservlet
 # store
@@ -88,7 +88,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: pubstore1
+           hostname: apim_pubstore1
            hostrole:
            porttype: HTTPservlet
     - 
@@ -97,7 +97,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: pubstore1
+           hostname: apim_pubstore1
            hostrole:
            porttype: HTTPSservlet
 
@@ -108,7 +108,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: pubstore1
+           hostname: apim_pubstore1
            hostrole:
            porttype: HTTPservlet
     - 
@@ -117,7 +117,7 @@ upstreams:
       hosts:
         host:
           - 
-           hostname: pubstore1
+           hostname: apim_pubstore1
            hostrole:
            porttype: HTTPSservlet
 
