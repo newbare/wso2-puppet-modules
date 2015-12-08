@@ -5,7 +5,7 @@ ssldir=/var/lib/puppet/ssl
 rundir=/var/run/puppet
 factpath=$vardir/lib/facter
 server = puppet
-environment=production
+environment = <%= @puppet_environment %>
 <%- ipaddress = @ipaddress -%>
 <%- nodes = scope.function_hiera(['nodes']) -%>
 certname = <%=nodes.key(ipaddress)-%>
