@@ -10,16 +10,16 @@ publisher:
  sub_cluster_domain: false
  members:
     -
-     name: publisher2
+     name: apim_publisher2
      port:  4000
     -
-     name: publisher1
+     name: apim_publisher1
      port: 4000
     -
-     name: store1
+     name: apim_store1
      port:  4000
     -
-     name: store2
+     name: apim_store2
      port: 4000
  port_mapping: false
  stage: deploy
