@@ -76,7 +76,7 @@ define greg::initialize ($repo, $version, $service, $local_dir, $target, $mode, 
   }
   ->
   file { "${target}/wso2${service}-${version}/repository/resources/security":
-      source => "puppet:///modules/greg/5.1.0/security",
+      source => "puppet:///modules/greg/${version}/security",
       recurse => true,
       ignore => "README.md",
   }
