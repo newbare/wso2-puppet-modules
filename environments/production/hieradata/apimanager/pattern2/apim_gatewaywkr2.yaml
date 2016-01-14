@@ -9,10 +9,10 @@ gateway:
  sub_cluster_domain: worker
  members:
     - 
-     name: gatewaymgr1
+     name: apim_gatewaymgr1
      port:  4000
     - 
-     name: gatewaywkr1
+     name: apim_gatewaywkr1
      port:  4000
  port_mapping: false
  stage: deploy

@@ -12,17 +12,17 @@ publisher:
  membershipScheme: wka
  members:
     - 
-     name: publisher1
+     name: apim_publisher1
      port: 4000
     - 
-     name: store1
+     name: apim_store1
      port:  4000
     - 
-     name: store2
+     name: apim_store2
      port: 4000
     - 
-     name: store3
+     name: apim_store3
      port:  4000
     - 
-     name: store4
+     name: apim_store4
      port: 4000

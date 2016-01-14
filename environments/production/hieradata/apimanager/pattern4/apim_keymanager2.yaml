@@ -12,8 +12,8 @@ keymanager:
  stage: deploy
  members:
     - 
-     name: keymanager1
+     name: apim_keymanager1
      port: 4000
     - 
-     name: keymanager2
+     name: apim_keymanager2
      port:  4000 

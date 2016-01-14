@@ -13,8 +13,8 @@ gateway:
  membershipScheme: wka
  members:
     - 
-     name: gateway1
+     name: apim_gateway1
      port: 4000
     - 
-     name: gateway2
+     name: apim_gateway2
      port:  4000
