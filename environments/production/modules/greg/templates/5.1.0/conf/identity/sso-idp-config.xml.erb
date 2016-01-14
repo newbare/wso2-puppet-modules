@@ -20,7 +20,7 @@
     <ServiceProviders>
         <ServiceProvider>
             <Issuer>store</Issuer>
-            <%- if @gregtype = 'gregstore' %>
+            <%- if @gregtype == "gregstore" %>
             <AssertionConsumerService>https://<%= @carbon_hostname %>/store/acs</AssertionConsumerService>
             <%- else -%>
             <AssertionConsumerService>https://localhost:9443/social/acs</AssertionConsumerService>
@@ -30,7 +30,7 @@
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>social</Issuer>
-            <%- if @gregtype = 'gregstore' %>
+            <%- if @gregtype == "gregstore" %>
             <AssertionConsumerService>https://<%= @carbon_hostname %>/social/acs</AssertionConsumerService>
             <%- else -%>
             <AssertionConsumerService>https://localhost:9443/social/acs</AssertionConsumerService>
@@ -40,10 +40,10 @@
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>publisher</Issuer>
-            <%- if @gregtype = 'gregpublisher' -%>
-            <AssertionConsumerService>https://<%= @carbon_hostname %>/publisher/acs</AssertionConsumerService>
-            <%- else -%>
+            <%- if @gregtype == "gregstore" -%>
             <AssertionConsumerService>https://localhost:9443/publisher/acs</AssertionConsumerService>
+            <%- else -%>
+            <AssertionConsumerService>https://<%= @carbon_hostname %>/publisher/acs</AssertionConsumerService>
             <%- end -%>
             <SignResponse>true</SignResponse>
             <CustomLoginPage>/publisher/controllers/login.jag</CustomLoginPage>
