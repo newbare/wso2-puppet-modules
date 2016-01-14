@@ -50,6 +50,11 @@ upstreams:
            hostname: greg_store1
            hostrole:
            porttype: HTTPSservlet
+	host:
+          -
+           hostname: greg_store2
+           hostrole:
+           porttype: HTTPSservlet
 
 servers:
 
